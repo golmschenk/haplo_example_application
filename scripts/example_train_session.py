@@ -16,16 +16,16 @@ from haplo.train_system_configuration import TrainSystemConfiguration
 
 @distributed_logging
 def example_train_session():
-    full_dataset_path = Path('data/800k_parameters_and_phase_amplitudes.db')
+    full_dataset_path = Path('data/2k_parameters_and_phase_amplitudes.db')
     full_train_dataset = NicerDataset.new(
         dataset_path=full_dataset_path,
-        length=600_000_000,
+        length=2001,
         parameters_transform=PrecomputedNormalizeParameters(),
         phase_amplitudes_transform=PrecomputedNormalizePhaseAmplitudes(),
         in_memory=True
     )
     test_dataset, validation_dataset, train_dataset, _ = split_dataset_into_count_datasets(
-        full_train_dataset, [100_000, 100_000, 500_000])
+        full_train_dataset, [200, 200, 1_600])
     model = Cura()
     loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetric()
     metric_functions = [PlusOneChiSquaredStatisticMetric(), PlusOneBeforeUnnormalizationChiSquaredStatisticMetric(),

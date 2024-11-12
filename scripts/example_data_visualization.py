@@ -8,7 +8,7 @@ from haplo.nicer_dataset import NicerDataset
 
 
 def example_data_visualization():
-    dataset_path = Path('data/800k_parameters_and_phase_amplitudes.db')
+    dataset_path = Path('data/2k_parameters_and_phase_amplitudes.db')
     dataset = NicerDataset.new(dataset_path=dataset_path)
     
     example0 = dataset[0]
