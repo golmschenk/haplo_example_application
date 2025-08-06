@@ -30,7 +30,7 @@ def example_train_session():
     loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetric()
     metric_functions = [PlusOneChiSquaredStatisticMetric(), PlusOneBeforeUnnormalizationChiSquaredStatisticMetric(),
                         SumDifferenceSquaredOverMedianExpectedSquaredMetric()]
-    hyperparameter_configuration = TrainHyperparameterConfiguration.new()
+    hyperparameter_configuration = TrainHyperparameterConfiguration.new(cycles=10)
     system_configuration = TrainSystemConfiguration.new()
     optimizer = AdamW(params=model.parameters(), lr=hyperparameter_configuration.learning_rate,
                       weight_decay=hyperparameter_configuration.weight_decay,

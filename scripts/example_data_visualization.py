@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from bokeh.io import show
-from bokeh.models import Column
+from bokeh.models import Row
 from bokeh.plotting import figure
 
 from haplo.nicer_dataset import NicerDataset
@@ -20,8 +20,8 @@ def example_data_visualization():
     phase_amplitudes_figure = figure(x_axis_label='phase', y_axis_label='amplitude')
     phase_amplitudes_figure.line(x=list(range(64)), y=phase_amplitudes0)
     
-    column = Column(parameters_figure, phase_amplitudes_figure)
-    show(column)
+    row = Row(parameters_figure, phase_amplitudes_figure)
+    show(row)
 
 
 if __name__ == '__main__':
