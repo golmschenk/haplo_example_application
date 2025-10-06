@@ -3,6 +3,7 @@ from pathlib import Path
 from torch.optim import AdamW
 
 from haplo.distributed import distributed_logging
+from haplo.internal.transforms.affine_normalize import default_output_affine_transform, default_input_affine_transform
 from haplo.losses import PlusOneBeforeUnnormalizationChiSquaredStatisticMetric, \
     PlusOneChiSquaredStatisticMetric, SumDifferenceSquaredOverMedianExpectedSquaredMetric
 from haplo.models import Cura
@@ -26,7 +27,10 @@ def example_train_session():
     )
     test_dataset, validation_dataset, train_dataset, _ = split_dataset_into_count_datasets(
         full_train_dataset, [200, 200, 1_600])
-    model = Cura.new()
+    model = Cura.new(
+        input_transformation=default_input_affine_transform,
+        output_transformation=default_output_affine_transform
+    )
     loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetric()
     metric_functions = [PlusOneChiSquaredStatisticMetric(), PlusOneBeforeUnnormalizationChiSquaredStatisticMetric(),
                         SumDifferenceSquaredOverMedianExpectedSquaredMetric()]
