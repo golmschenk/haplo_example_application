@@ -27,10 +27,8 @@ def example_train_session():
     )
     test_dataset, validation_dataset, train_dataset, _ = split_dataset_into_count_datasets(
         full_train_dataset, [200, 200, 1_600])
-    model = Cura.new(
-        input_transformation=default_input_affine_transform,
-        output_transformation=default_output_affine_transform
-    )
+    model = Cura.new(input_transformation=default_input_affine_transform,
+                     output_transformation=default_output_affine_transform)
     loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetric()
     metric_functions = [PlusOneChiSquaredStatisticMetric(), PlusOneBeforeUnnormalizationChiSquaredStatisticMetric(),
                         SumDifferenceSquaredOverMedianExpectedSquaredMetric()]

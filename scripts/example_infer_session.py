@@ -21,10 +21,8 @@ def example_infer_session():
     test_dataset, validation_dataset, train_dataset, _ = split_dataset_into_count_datasets(
         full_train_dataset, [200, 200, 1_600])
 
-    model = Cura.new(
-        input_transformation=default_input_affine_transform,
-        output_transformation=default_output_affine_transform
-    )
+    model = Cura.new(input_transformation=default_input_affine_transform,
+                     output_transformation=default_output_affine_transform)
     model = WrappedModel(model)  # The DDP module requires an extra wrapping. This emulates that.
     saved_model_path = Path('sessions/your/path/to/model.pt')
     model.load_state_dict(torch.load(str(saved_model_path), map_location=torch.device('cpu')))
