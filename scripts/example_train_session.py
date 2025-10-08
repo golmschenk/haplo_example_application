@@ -5,9 +5,7 @@ from torch.optim import AdamW
 from haplo.internal.dataset.split import split_dataset_into_count_datasets
 from haplo.internal.dataset.xarray_zarr import XarrayBasedDataset
 from haplo.internal.distributed import distributed_logging
-from haplo.internal.losses import PlusOneBeforeUnnormalizationChiSquaredStatisticMetricWithNormalization, \
-    PlusOneChiSquaredStatisticMetricWithNormalization, \
-    SumDifferenceSquaredOverMedianExpectedSquaredMetricWithNormalization
+from haplo.internal.losses import SumDifferenceSquaredOverMedianExpectedSquaredMetric, PlusOneChiSquaredStatisticMetric
 from haplo.internal.train_hyperparameter_configuration import TrainHyperparameterConfiguration
 from haplo.internal.train_logging_configuration import TrainLoggingConfiguration
 from haplo.internal.train_session import train_session
@@ -24,9 +22,9 @@ def example_train_session():
         full_dataset, [200, 200, 1_600])
     model = Cura.new(input_transformation=default_input_affine_transform,
                      output_transformation=default_output_affine_transform)
-    loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetricWithNormalization()
-    metric_functions = [PlusOneChiSquaredStatisticMetricWithNormalization(), PlusOneBeforeUnnormalizationChiSquaredStatisticMetricWithNormalization(),
-                        SumDifferenceSquaredOverMedianExpectedSquaredMetricWithNormalization()]
+    loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetric()
+    metric_functions = [PlusOneChiSquaredStatisticMetric(),
+                        SumDifferenceSquaredOverMedianExpectedSquaredMetric()]
     hyperparameter_configuration = TrainHyperparameterConfiguration.new(cycles=10)
     system_configuration = TrainSystemConfiguration.new()
     optimizer = AdamW(params=model.parameters(), lr=hyperparameter_configuration.learning_rate,
