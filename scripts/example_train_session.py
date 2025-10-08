@@ -2,31 +2,26 @@ from pathlib import Path
 
 from torch.optim import AdamW
 
+from haplo.internal.dataset.split import split_dataset_into_count_datasets
+from haplo.internal.dataset.xarray_zarr import XarrayBasedDataset
 from haplo.internal.distributed import distributed_logging
-from haplo.internal.transforms.affine_normalize import default_output_affine_transform, default_input_affine_transform
 from haplo.internal.losses import PlusOneBeforeUnnormalizationChiSquaredStatisticMetricWithNormalization, \
-    PlusOneChiSquaredStatisticMetricWithNormalization, SumDifferenceSquaredOverMedianExpectedSquaredMetricWithNormalization
-from haplo.models import Cura
-from haplo.nicer_dataset import NicerDataset, split_dataset_into_count_datasets
-from haplo.nicer_transform import PrecomputedNormalizeParameters, PrecomputedNormalizePhaseAmplitudes
+    PlusOneChiSquaredStatisticMetricWithNormalization, \
+    SumDifferenceSquaredOverMedianExpectedSquaredMetricWithNormalization
 from haplo.internal.train_hyperparameter_configuration import TrainHyperparameterConfiguration
 from haplo.internal.train_logging_configuration import TrainLoggingConfiguration
 from haplo.internal.train_session import train_session
 from haplo.internal.train_system_configuration import TrainSystemConfiguration
+from haplo.internal.transforms.affine_normalize import default_output_affine_transform, default_input_affine_transform
+from haplo.models import Cura
 
 
 @distributed_logging
 def example_train_session():
-    full_dataset_path = Path('data/2k_parameters_and_phase_amplitudes.db')
-    full_train_dataset = NicerDataset.new(
-        dataset_path=full_dataset_path,
-        length=2001,
-        parameters_transform=PrecomputedNormalizeParameters(),
-        phase_amplitudes_transform=PrecomputedNormalizePhaseAmplitudes(),
-        in_memory=True
-    )
+    dataset_path = Path('data/2k_parameters_and_phase_amplitudes.zarr.zip')
+    full_dataset = XarrayBasedDataset.new(zarr_path=dataset_path)
     test_dataset, validation_dataset, train_dataset, _ = split_dataset_into_count_datasets(
-        full_train_dataset, [200, 200, 1_600])
+        full_dataset, [200, 200, 1_600])
     model = Cura.new(input_transformation=default_input_affine_transform,
                      output_transformation=default_output_affine_transform)
     loss_function = SumDifferenceSquaredOverMedianExpectedSquaredMetricWithNormalization()

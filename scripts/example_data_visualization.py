@@ -4,12 +4,12 @@ from bokeh.io import show
 from bokeh.models import Row
 from bokeh.plotting import figure
 
-from haplo.nicer_dataset import NicerDataset
+from haplo.internal.dataset.xarray_zarr import XarrayBasedDataset
 
 
 def example_data_visualization():
-    dataset_path = Path('data/2k_parameters_and_phase_amplitudes.db')
-    dataset = NicerDataset.new(dataset_path=dataset_path)
+    dataset_path = Path('data/2k_parameters_and_phase_amplitudes.zarr.zip')
+    dataset = XarrayBasedDataset.new(zarr_path=dataset_path)
     
     example0 = dataset[0]
     parameters0, phase_amplitudes0 = example0
